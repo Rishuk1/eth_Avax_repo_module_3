@@ -89,8 +89,6 @@ For additional help, use the [Remix documentation](https://remix-ide.readthedocs
 
 Your Name
 
-[@YourTwitterHandle](https://twitter.com/YourTwitterHandle)
-
 ## License
 
 This project is licensed under the MIT License.
