@@ -1,43 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract TokenCreator {
-    // Token details
-    string public name = "FlashToken";
-    string public symbol = "FTK";
-    uint public decimals = 18;
-    
-    // Total supply and owner address
-    uint public totalSupply;
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract FlashToken is ERC20 {
     address public owner;
-    
-    // Balances mapping
-    mapping(address => uint) public balanceOf;
-    
-    // Constructor: initializes the contract with the deployer as the owner
-    constructor() {
+
+    constructor(uint initialSupply) ERC20("FlashToken", "FTK") {
         owner = msg.sender;
+        _mint(owner, initialSupply);
     }
 
-    // Function to mint new tokens (only accessible by the owner)
-    function mint(address to, uint amount) public {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Not owner");
-        totalSupply += amount;
-        balanceOf[to] += amount;
+        _;
     }
 
-    // Function to transfer tokens from sender's account to another account
-    function transfer(address to, uint amount) public returns (bool) {
-        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
-        balanceOf[msg.sender] -= amount;
-        balanceOf[to] += amount;
-        return true;
+    function mint(address to, uint amount) public onlyOwner {
+        _mint(to, amount);
     }
 
-    // Function to burn tokens (remove them from circulation)
     function burn(uint amount) public {
-        require(balanceOf[msg.sender] >= amount, "Insufficient balance");
-        balanceOf[msg.sender] -= amount;
-        totalSupply -= amount;
+        _burn(msg.sender, amount);
+    }
+
+   
+    function transferToken(address from, address to, uint amount) public  {
+        _transfer(from, to, amount);
     }
 }
